@@ -8,58 +8,40 @@ const { browser, element, by } = require('protractor');
 class JobPage extends BasePage {
     constructor() {
         super();
-        this.learnMoreAboutEpamButton = element(by.css('.vacancy-page__local-site-button'));
-        this.learnMoreAboutEpamPageUrl = 'https://careers.epam.by/';
-        this.relatedJobOpeningsButtons = element.all(by.css('.related-vacancies-and-trainings__item'));
-        this.dayInLifeButtons = element.all(by.css('.responsive-image__link'));
-        this.contactUsButton = element(by.css('.button__content.button__content--desktop'));
-        this.relatedJobOpeningsNames = element.all(by.css('.related-vacancies-and-trainings__title'));
-        this.firstRelatedJobOpeningName = '';
-        this.jobOpeningName = element(by.css('.recruiting-page__header h1'));
-        this.personsNamesInDaySection = element.all(by.css('.color-light-blue'));
-        this.nameOfFirstPersonInDaySection = '';
-        this.nameOfPersonOnDayInLifePage = element(by.css('.detail-page-author__name'));
-        this.titleTextOnContactUsPage = element(by.css('.title-ui.title--center.title--mixed-case'));
+        this['Learn more about EPAM'] = element(by.css('.vacancy-page__local-site-button'));
+        this['first related job opening'] = element.all(by.css('.related-vacancies-and-trainings__item')).get(0);
+        this['first person from A day in the life section'] = element.all(by.css('.responsive-image__link')).get(0);
+        this['Contact us'] = element(by.css('.button__content.button__content--desktop'));
+        this.firstRelatedJobOpening = element.all(by.css('.related-vacancies-and-trainings__title')).get(0);
+        this.firstPersonDayInLifeSection = element.all(by.css('.color-light-blue')).get(0);
+        this.jobOpening = element(by.css('.recruiting-page__header h1'));
+
+        this['expected element after clicking the Learn more about EPAM button'] = element(by.css('.title-ui.title--center.title--mixed-case.color-white.title--bold'));
+        this['expected element after clicking the first related job opening button'] = element(by.css('.recruiting-page__header h1'));
+        this['expected element after clicking the first person from A day in the life section button'] = element(by.css('.detail-page-author__name'));
+        this['expected element after clicking the Contact us button'] = element(by.css('.title-ui.title--center.title--mixed-case'));
     }
 
-    async clickLearnMoreAboutEpamBtn() {
-        await baseElements.click(this.learnMoreAboutEpamButton);
-        await waiters.waitUntilUrlIs(this.learnMoreAboutEpamPageUrl);
+    async isLoaded() {
+        await waiters.waitUntilIsVisible(this.jobOpening);
+        let pageUrl = await this.getUrl();
+        return pageUrl.includes('job-listings');
     }
 
-    async setNameOfFirstRelatedJobOpening() {
-        this.firstRelatedJobOpeningName = await this.relatedJobOpeningsNames.get(0).getText();
+    async getNameOfFirstRelatedJobOpening() {
+        return this.firstRelatedJobOpening.getText();
     }
 
-    async setNameOfFirstPersonInDaySection() {
-        let nameOfPerson = await this.personsNamesInDaySection.get(0).getText();
-        this.nameOfFirstPersonInDaySection = nameOfPerson.toLowerCase();
+    async getNameOfFirstPersonDayInLifeSection() {
+        return this.firstPersonDayInLifeSection.getText().then(value => value.toLowerCase());
     }
 
-    async clickFirstRelatedJobOpeningBtn() {
-        await baseElements.click(this.relatedJobOpeningsButtons.get(0));
-        await waiters.waitUntilIsVisible(this.jobOpeningName);
+    async getNameOfJobOpening() {
+        return this.jobOpening.getText().then(value => value.split(/\r?\n/)[0]);
     }
 
-    async clickFirstPersonInDaySection() {
-        await baseElements.click(this.dayInLifeButtons.get(0));
-        await waiters.waitUntilIsVisible(this.nameOfPersonOnDayInLifePage);
-    }
-
-    async clickContactUsBtn() {
-        await baseElements.click(this.contactUsButton);
-        await waiters.waitUntilIsVisible(this.titleTextOnContactUsPage);
-    }
-
-    async getJobOpeningNameOnJobPage() {
-        let nameToRefactor = await this.jobOpeningName.getText()
-        let jobName = nameToRefactor.split(/\r?\n/)[0];
-        return jobName;
-    }
-
-    async getTitleInLowerCase() {
-        let title = await this.getTitle();
-        return title.toLowerCase();
+    async getTitleOfNewPage() {
+        return this.getTitle().then(value => value.toLowerCase());
     }
 
 }

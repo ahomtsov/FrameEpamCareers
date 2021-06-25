@@ -21,6 +21,7 @@ exports.config = {
         browser.waitForAngularEnabled(false);
         browser.manage().window().setSize(1920, 1080);
         fs.emptyDirSync('./result');
+        browser.sleep(2000);
         browser.manage().addCookie({name: 'epam:cookiesAccepted', value: 'true', domain: 'www.epam.com'});
     }
 }

@@ -9,14 +9,15 @@ const { browser, element, by } = require('protractor');
 
 class FilterComponent {
     constructor() {
-        this.keywordField = element(by.css('#new_form_job_search_1445745853_copy-keyword'));
+        this['Keyword field'] = element(by.css('#new_form_job_search_1445745853_copy-keyword'));
         this.locationField = element(by.css('.select2-selection__rendered'));
+        this['Location field'] = element(by.css('.select2-selection__rendered'));
         this.checkboxes = element.all(by.css('.recruiting-search__filter-label.checkbox-custom-label'));
-        this.openToRelocationCheckbox = this.checkboxes.get(0);
-        this.officeCheckbox = this.checkboxes.get(1);
-        this.remoteCheckbox = this.checkboxes.get(2);
+        this['Open to Relocation checkbox'] = this.checkboxes.get(0);
+        this['Office checkbox'] = this.checkboxes.get(1);
+        this['Remote checkbox'] = this.checkboxes.get(2);
         this.findButton = element(by.css('.recruiting-search__submit'));
-        this.allLocationsLocationDropdownButton = element(by.xpath('//li[contains(text(), "All Locations")]'));
+        this['All Locations value'] = element(by.xpath('//li[contains(text(), "All Locations")]'));
         this.firstPartOfCountryLocationButtonXpath = '//*[@class = "select2-results__group"][contains(text(), "';
         this.secondPartOfCountryLocationButtonXpath = '")]';
         this.firstPartOfCityLocationButtonXpath = '//li[contains(text(), "';
@@ -28,16 +29,21 @@ class FilterComponent {
         this.firstPartOfIconsOfJobXpath = '//*[@class = "search-result__list"]/li[';
         this.secondPartOfIconsOfJobXpath = ']//*[@class = "search-result__item-types"]/li/span[contains(@class, "search-result__item-icon tooltip")]';
         this.errorMessage = element(by.css('.search-result__error-message'));
-        this.filterResultHeading = element(by.css('.search-result__heading'));
-        this.filterResultHeadingText = '';
-        this.jobOpenings = element.all(by.xpath('//*[contains(text(), "View and apply")]'));
+        this['Filter result heading'] = element(by.css('.search-result__heading'));
+        this['Filter result heading text'] = '';
+        this.firstAppearedJobOpening = element.all(by.xpath('//*[contains(text(), "View and apply")]')).get(0);
         this.jobOpeningsNames = element.all(by.css('.search-result__item-name'));
-        this.firstJobOpeningName = '';
+        this['name of the job opening'] = '';
         this.jobOpeningNameOnJobPage = element(by.css('.recruiting-page__header h1'));
     }
 
-    async typeStringInKeywordField(string) {
-        await baseElements.sendKeys(this.keywordField, string);
+    async clickFindButton() {
+        await baseElements.click(this.findButton);
+        await browser.sleep(2000);
+    }
+
+    async clickFirstAppearedJobOpening() {
+        await baseElements.click(this.firstAppearedJobOpening);
     }
 
     async setLocationInLocationField(country, city) {
@@ -49,59 +55,30 @@ class FilterComponent {
         await baseElements.click(cityLocationButton);
     }
 
-    async markCheckbox(checkbox) {
-        switch (checkbox) {
-            case 'Open to Relocation':
-                await baseElements.click(this.openToRelocationCheckbox);
-                break;
-            case 'Office':
-                await baseElements.click(this.officeCheckbox);
-                break;
-            case 'Remote':
-                await baseElements.click(this.remoteCheckbox);
-                break;
-        }
-    }
-
-    async setAllLocationsValueInLocationField() {
-        await baseElements.click(this.locationField);
-        await baseElements.click(this.allLocationsLocationDropdownButton);
-    }
-
-    async clickFindButton() {
-        await baseElements.click(this.findButton);
-        await browser.sleep(2000);
-    }
-
     async refreshPage() {
         await helpers.reloadPage();
-        await waiters.waitUntilIsVisible(this.filterResultHeading);
+        await waiters.waitUntilIsVisible(this['Filter result heading']);
     }
 
-    async setFilterResultHeading() {
-        this.filterResultHeadingText = await this.filterResultHeading.getText();
+    async ['set Filter result heading']() {
+        this['Filter result heading text'] = await this['Filter result heading'].getText();
     }
 
-    async setNameOfFirstJobOpening() {
-        this.firstJobOpeningName = await this.jobOpeningsNames.get(0).getText();
-    }
-
-    async clickFirstJobOpening() {
-        await baseElements.click(this.jobOpenings.get(0));
-        await waiters.waitUntilIsVisible(this.jobOpeningNameOnJobPage);
+    async ['set Name of the first appeared job opening']() {
+        this['name of the job opening'] = await this.jobOpeningsNames.get(0).getText();
     }
 
     async openPageByCurrentUrl() {
         await basePage.go(await basePage.getUrl());
-        await waiters.waitUntilIsVisible(this.filterResultHeading);
+        await waiters.waitUntilIsVisible(this['Filter result heading']);
     }
 
     async returnToPreviousPage() {
         await browser.navigate().back();
-        await waiters.waitUntilIsVisible(this.filterResultHeading);
+        await waiters.waitUntilIsVisible(this['Filter result heading']);
     }
 
-    async getJobOpeningNameOnJobPage() {
+    async ['get name of the job opening on the job page']() {
         let nameToRefactor = await this.jobOpeningNameOnJobPage.getText()
         let jobName = nameToRefactor.split(/\r?\n/)[0];
         return jobName;
@@ -132,7 +109,7 @@ class FilterComponent {
     }
 
     async twoDimensionalArrayOfIconsOfJobs(amountOfJobs) {
-        browser.sleep(2000)
+        browser.sleep(2000);
         let amount = parseInt(amountOfJobs);
         let twoDimensionalArrayOfIcons = [];
         for (let i = 1; i <= amount; i++) {

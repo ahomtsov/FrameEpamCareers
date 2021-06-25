@@ -6,7 +6,8 @@
   "scripts": {
     "update": "webdriver-manager update && node node_modules/protractor/bin/webdriver-manager update",
     "test": "protractor protractor.conf.js",
-    "redirFomCareersPage": "protractor protractor.conf.js --cucumberOpts.tags \"@redirectingToOtherPagesFromCareersPage\""
+    "redirFomCareersPage": "protractor protractor.conf.js --cucumberOpts.tags \"@redirectingToOtherPagesFromCareersPage\"",
+    "QWE": "protractor protractor.conf.js --cucumberOpts.tags \"@CURRENT\""
   },
   "author": "",
   "license": "ISC",

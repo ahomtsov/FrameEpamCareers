@@ -9,11 +9,16 @@ class BasePage {
             m: 4000,
             l: 8000,
             xl: 10000
-        }
+        };
+        this.url = 'https://www.epam.com/';
     }
 
     async go(url) {
         await browser.get(url);
+    }
+
+    async openPage() {
+        await browser.get(this.url);
     }
 
     async getTitle() {
