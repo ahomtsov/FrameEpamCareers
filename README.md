@@ -5,12 +5,12 @@ The master branch contains a basic approach to the framework implementation.
 The query branch contains a query/state approach to the framework implementation.
 
 Prerequisites:
-Install NodeJs on your OS and set up all required environmental variables.
-Use cmd command "npm i" from folder "FrameEpamCareers".
-After that use cmd command "npm run update" from folder "FrameEpamCareers".
+1. Install NodeJs on your OS and set up all required environmental variables.
+2. Use cmd command "npm i" from folder "FrameEpamCareers".
+3. After that use cmd command "npm run update" from folder "FrameEpamCareers".
 
-Getting Started
-Use cmd command "npm test" from folder "FrameEpamCareers".
+Getting Started:
+1. Use cmd command "npm test" from folder "FrameEpamCareers".
 
 Authors:
 Anton Khamtsou
