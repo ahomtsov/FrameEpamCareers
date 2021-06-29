@@ -3,7 +3,7 @@ Feature: Redirecting to other pages by buttons on Job page
 
   Background:
     Given I open the "EPAM Careers" page
-    And I type "javascript" in the "Keyword" field
+    And I type "javascript" in the Keyword field
     And I click the Find button
     And I click the first appeared job opening
     Then I should be on the "Job" page
@@ -13,13 +13,12 @@ Feature: Redirecting to other pages by buttons on Job page
     Then the title should be "EPAM | Работа в IT для опытных и начинающих специалистов"
 
   Scenario: Open the first related job opening page
-    When I remember "name of the first related job opening"
+    When I remember the "name of the first related job opening"
     And I open new page by clicking the "first related job opening" button
     Then the "name of the job opening" equals the remembered one
 
-  @CURRENT
   Scenario: Open the first A day in the life page
-    When I remember "name of the first person from A day in the life section"
+    When I remember the "name of the first person from A day in the life section"
     And I open new page by clicking the "first person from A day in the life section" button
     Then the "title of the new page" equals the remembered one
 

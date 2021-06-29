@@ -9,32 +9,28 @@ const { browser, element, by } = require('protractor');
 
 class FilterComponent {
     constructor() {
-        this['Keyword field'] = element(by.css('#new_form_job_search_1445745853_copy-keyword'));
+        this.keywordField = element(by.css('#new_form_job_search_1445745853_copy-keyword'));
         this.locationField = element(by.css('.select2-selection__rendered'));
-        this['Location field'] = element(by.css('.select2-selection__rendered'));
         this.checkboxes = element.all(by.css('.recruiting-search__filter-label.checkbox-custom-label'));
         this['Open to Relocation checkbox'] = this.checkboxes.get(0);
         this['Office checkbox'] = this.checkboxes.get(1);
         this['Remote checkbox'] = this.checkboxes.get(2);
         this.findButton = element(by.css('.recruiting-search__submit'));
-        this['All Locations value'] = element(by.xpath('//li[contains(text(), "All Locations")]'));
+        this.allLocationsValueInLocationField = element(by.xpath('//li[contains(text(), "All Locations")]'));
+        this['filter result heading'] = element(by.css('.search-result__heading'));
+        this['name of the first appeared job opening'] = element.all(by.css('.search-result__item-name')).get(0);
         this.firstPartOfCountryLocationButtonXpath = '//*[@class = "select2-results__group"][contains(text(), "';
         this.secondPartOfCountryLocationButtonXpath = '")]';
         this.firstPartOfCityLocationButtonXpath = '//li[contains(text(), "';
         this.secondPartOfCityLocationButtonXpath = '")]';
         this.firstPartOfCitiesListboxXpath = '//*[@aria-label = "';
         this.secondPartOfCitiesListboxXpath = '"]/ul';
-        this.namesOfJobs = element.all(by.css('.search-result__item-name'));
-        this.locationsOfJobs = element.all(by.css('.search-result__location'));
+        this['names of jobs'] = element.all(by.css('.search-result__item-name'));
+        this['locations of jobs'] = element.all(by.css('.search-result__location'));
         this.firstPartOfIconsOfJobXpath = '//*[@class = "search-result__list"]/li[';
         this.secondPartOfIconsOfJobXpath = ']//*[@class = "search-result__item-types"]/li/span[contains(@class, "search-result__item-icon tooltip")]';
         this.errorMessage = element(by.css('.search-result__error-message'));
-        this['Filter result heading'] = element(by.css('.search-result__heading'));
-        this['Filter result heading text'] = '';
         this.firstAppearedJobOpening = element.all(by.xpath('//*[contains(text(), "View and apply")]')).get(0);
-        this.jobOpeningsNames = element.all(by.css('.search-result__item-name'));
-        this['name of the job opening'] = '';
-        this.jobOpeningNameOnJobPage = element(by.css('.recruiting-page__header h1'));
     }
 
     async clickFindButton() {
@@ -57,59 +53,22 @@ class FilterComponent {
 
     async refreshPage() {
         await helpers.reloadPage();
-        await waiters.waitUntilIsVisible(this['Filter result heading']);
+        await waiters.waitUntilIsVisible(this['filter result heading']);
     }
 
-    async ['set Filter result heading']() {
-        this['Filter result heading text'] = await this['Filter result heading'].getText();
-    }
-
-    async ['set Name of the first appeared job opening']() {
-        this['name of the job opening'] = await this.jobOpeningsNames.get(0).getText();
-    }
-
-    async openPageByCurrentUrl() {
-        await basePage.go(await basePage.getUrl());
-        await waiters.waitUntilIsVisible(this['Filter result heading']);
-    }
-
-    async returnToPreviousPage() {
-        await browser.navigate().back();
-        await waiters.waitUntilIsVisible(this['Filter result heading']);
-    }
-
-    async ['get name of the job opening on the job page']() {
-        let nameToRefactor = await this.jobOpeningNameOnJobPage.getText()
-        let jobName = nameToRefactor.split(/\r?\n/)[0];
-        return jobName;
-    }
-
-    async getArrayOfNamesOfJobsInLowerCase(amountOfJobs) {
+    async getArrayOfParametersOfJobsInLowerCase(parameter, amountOfJobs) {
         let amount = parseInt(amountOfJobs);
-        let arrayOfNames = [];
+        let arrayOfParameters = [];
         for (let i = 0; i < amount; i++) {
-            arrayOfNames[i] = await this.namesOfJobs.get(i).getText();
+            arrayOfParameters[i] = await this[parameter + 's of jobs'].get(i).getText();
         }
-        arrayOfNames.forEach(function (element, index) {
-            arrayOfNames[index] = element.toString().toLowerCase();
+        arrayOfParameters.forEach(function (element, index) {
+            arrayOfParameters[index] = element.toString().toLowerCase();
         })
-        return arrayOfNames;
+        return arrayOfParameters;
     }
 
-    async getArrayOfLocationsOfJobsInLowerCase(amountOfJobs) {
-        let amount = parseInt(amountOfJobs);
-        let arrayOfLocations = [];
-        for (let i = 0; i < amount; i++) {
-            arrayOfLocations[i] = await this.locationsOfJobs.get(i).getText();
-        }
-        arrayOfLocations.forEach(function (element, index) {
-            arrayOfLocations[index] = element.toString().toLowerCase();
-        })
-        return arrayOfLocations;
-    }
-
-    async twoDimensionalArrayOfIconsOfJobs(amountOfJobs) {
-        browser.sleep(2000);
+    async getTwoDimensionalArrayOfIconsOfJobs(amountOfJobs) {
         let amount = parseInt(amountOfJobs);
         let twoDimensionalArrayOfIcons = [];
         for (let i = 1; i <= amount; i++) {
@@ -129,7 +88,6 @@ class FilterComponent {
         }
         return isPresented;
     }
-
 
     async isErrorMessageDisplayed() {
         let isPresented = false;
